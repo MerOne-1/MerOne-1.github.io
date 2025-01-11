@@ -12,11 +12,21 @@ class CryptoSnake {
         this.score = 0;
         this.cryptoCount = 0;
         this.gameLoop = null;
-        this.gameSpeed = 150;
+        this.difficultySettings = {
+            easy: { initialSpeed: 200, speedIncrease: 2, scoreMultiplier: 1 },
+            medium: { initialSpeed: 150, speedIncrease: 3, scoreMultiplier: 2 },
+            hard: { initialSpeed: 100, speedIncrease: 4, scoreMultiplier: 3 },
+            expert: { initialSpeed: 80, speedIncrease: 5, scoreMultiplier: 4 }
+        };
+        this.gameSpeed = this.difficultySettings.easy.initialSpeed;
+        this.currentDifficulty = 'easy';
 
         // Bind event listeners
         document.getElementById('startGame').addEventListener('click', () => this.startGame());
         document.addEventListener('keydown', (e) => this.handleKeyPress(e));
+        document.getElementById('difficulty').addEventListener('change', (e) => {
+            this.currentDifficulty = e.target.value;
+        });
     }
 
     generateCoin() {
@@ -86,14 +96,17 @@ class CryptoSnake {
 
         // Check if snake ate the coin
         if (head.x === this.coin.x && head.y === this.coin.y) {
-            this.score += 10;
+            const difficulty = this.difficultySettings[this.currentDifficulty];
+            this.score += 10 * difficulty.scoreMultiplier;
             this.cryptoCount++;
             document.getElementById('score').textContent = this.score;
             document.getElementById('cryptoCount').textContent = this.cryptoCount;
             this.coin = this.generateCoin();
-            // Increase speed
-            if (this.gameSpeed > 50) {
-                this.gameSpeed -= 5;
+            
+            // Increase speed based on difficulty
+            const minSpeed = 50;
+            if (this.gameSpeed > minSpeed) {
+                this.gameSpeed -= difficulty.speedIncrease;
                 clearInterval(this.gameLoop);
                 this.gameLoop = setInterval(() => this.gameStep(), this.gameSpeed);
             }
@@ -114,6 +127,11 @@ class CryptoSnake {
     }
 
     handleKeyPress(e) {
+        // Prevent scrolling when using arrow keys
+        if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+            e.preventDefault();
+        }
+
         const newDirection = {
             'ArrowUp': 'up',
             'ArrowDown': 'down',
@@ -147,7 +165,7 @@ class CryptoSnake {
         this.direction = 'right';
         this.score = 0;
         this.cryptoCount = 0;
-        this.gameSpeed = 150;
+        this.gameSpeed = this.difficultySettings[this.currentDifficulty].initialSpeed;
         document.getElementById('score').textContent = '0';
         document.getElementById('cryptoCount').textContent = '0';
         

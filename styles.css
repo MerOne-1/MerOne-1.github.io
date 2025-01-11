@@ -67,6 +67,26 @@ footer {
     font-weight: bold;
 }
 
+.difficulty-selector {
+    margin: 15px 0;
+}
+
+.difficulty-selector select {
+    background: #1a1a1a;
+    color: #f7931a;
+    border: 2px solid #f7931a;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.difficulty-selector select:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(247, 147, 26, 0.5);
+}
+
 #startGame {
     background: #f7931a;
     color: white;
