@@ -101,3 +101,42 @@ footer {
 #startGame:hover {
     background: #e17f0e;
 }
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+    .game-container {
+        padding: 10px;
+    }
+
+    #gameCanvas {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        touch-action: none; /* Prevents default touch actions */
+    }
+
+    .game-info {
+        font-size: 1em;
+    }
+
+    #startGame {
+        padding: 15px 30px; /* Larger touch target for mobile */
+        font-size: 1.2em;
+    }
+
+    .difficulty-selector select {
+        padding: 10px 20px; /* Larger touch target for mobile */
+        font-size: 1.1em;
+    }
+}
+
+/* Prevent text selection during game play */
+#gameCanvas {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    touch-action: none;
+}

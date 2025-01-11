@@ -21,12 +21,22 @@ class CryptoSnake {
         this.gameSpeed = this.difficultySettings.easy.initialSpeed;
         this.currentDifficulty = 'easy';
 
+        // Touch controls
+        this.touchStart = { x: 0, y: 0 };
+        this.touchEnd = { x: 0, y: 0 };
+        this.minSwipeDistance = 30; // minimum distance for a swipe
+
         // Bind event listeners
         document.getElementById('startGame').addEventListener('click', () => this.startGame());
         document.addEventListener('keydown', (e) => this.handleKeyPress(e));
         document.getElementById('difficulty').addEventListener('change', (e) => {
             this.currentDifficulty = e.target.value;
         });
+
+        // Add touch event listeners
+        this.canvas.addEventListener('touchstart', (e) => this.handleTouchStart(e), false);
+        this.canvas.addEventListener('touchmove', (e) => this.handleTouchMove(e), false);
+        this.canvas.addEventListener('touchend', (e) => this.handleTouchEnd(e), false);
     }
 
     generateCoin() {
@@ -150,6 +160,54 @@ class CryptoSnake {
             
             if (opposites[newDirection] !== this.direction) {
                 this.direction = newDirection;
+            }
+        }
+    }
+
+    handleTouchStart(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        this.touchStart = {
+            x: touch.clientX,
+            y: touch.clientY
+        };
+    }
+
+    handleTouchMove(e) {
+        e.preventDefault(); // Prevent scrolling while playing
+    }
+
+    handleTouchEnd(e) {
+        e.preventDefault();
+        const touch = e.changedTouches[0];
+        this.touchEnd = {
+            x: touch.clientX,
+            y: touch.clientY
+        };
+
+        // Calculate swipe distance and direction
+        const dx = this.touchEnd.x - this.touchStart.x;
+        const dy = this.touchEnd.y - this.touchStart.y;
+        const absDx = Math.abs(dx);
+        const absDy = Math.abs(dy);
+
+        // Only change direction if the swipe is long enough
+        if (Math.max(absDx, absDy) > this.minSwipeDistance) {
+            // Determine if the swipe is horizontal or vertical
+            if (absDx > absDy) {
+                // Horizontal swipe
+                const newDirection = dx > 0 ? 'right' : 'left';
+                if (this.direction !== 'left' && newDirection === 'right' ||
+                    this.direction !== 'right' && newDirection === 'left') {
+                    this.direction = newDirection;
+                }
+            } else {
+                // Vertical swipe
+                const newDirection = dy > 0 ? 'down' : 'up';
+                if (this.direction !== 'up' && newDirection === 'down' ||
+                    this.direction !== 'down' && newDirection === 'up') {
+                    this.direction = newDirection;
+                }
             }
         }
     }
