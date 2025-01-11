@@ -194,6 +194,6 @@ class CryptoSnake {
 }
 
 // Initialize game when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    const game = new CryptoSnake();
+window.addEventListener('load', () => {
+    new CryptoSnake();
 });
